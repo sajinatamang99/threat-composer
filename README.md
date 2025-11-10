@@ -1,49 +1,102 @@
-<div align="center">
-    <img src="./images/coderco.jpg" alt="CoderCo" width="300"/>
-</div>
+# Threat Composer — Infrastructure as Code (IaC) Deployment
+**Threat Composer** is an open-source web application developed by **AWS Labs** for modeling and visualizing cloud threat scenarios. It is built as a React single-page application (SPA) and deploys a two-tier architecture on AWS, with a frontend client layer and backend service/API layer.
 
-# CoderCo Assignment 1 - Open Source App Hosted on ECS with Terraform 🚀
+🧩 Original Tool: [Threat Composer Tool](https://awslabs.github.io/threat-composer/workspaces/default/dashboard)
 
-This project is based on Amazon's Threat Composer Tool, an open source tool designed to facilitate threat modeling and improve security assessments. You can explore the tool's dashboard here: [Threat Composer Tool](https://awslabs.github.io/threat-composer/workspaces/default/dashboard)
+🌍 Live Application: [www.devopsproject.org](https://www.devopsproject.org)
 
-## Task/Assignment 📝
+📝 Medium Blog: [Threat Composer Medium Blog](https://medium.com/@sajina.tamang99/threat-composer-4b606d5163c0)
 
-- Create your own repository and complete the task there. You may create a `app` in your repo and copy all the files in this directory into it. Or alternatively, you can use this directory as is. Your choice.
+## Table of Contents
 
-- Your task will be to create a container image for the app, push it to ECR (recommended) or DockerHub. Ideally, you should use a CI/CD pipeline to build, test, and push the container image.
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Tools & Technologies](#tools--technologies)
+- [Project Structure](#project-structure)
+- [Architecture Diagram](#architecture-diagram)
+- [Local Setup](#local-setup)
+- [Demo](#demo)
+- [Screenshots](#screenshots)
 
-- Deploy the app on ECS using Terraform. All the resources should be provisioned using Terraform. Use TF modules.
+## 1. Overview
+Deployed the Threat Composer app on AWS using a secure, scalable, and automated DevOps pipeline. Infrastructure was provisioned with **Terraform**, containerized with **Docker**, stored in **ECR**, and deployed to **ECS Fargate**. A **GitHub Actions CI/CD pipeline** automated build, **trivy security scan**, and deployment. **Route 53** and **ACM** ensured domain management and HTTPS for a cost-efficient, reliable setup.
+	
+## 2. Prerequisites
+Before running this project, ensure the following are available
+- ✅ AWS Account with IAM User (programmatic access)
+- ✅ AWS CLI configured (aws configure in local system)
+- ✅ Terraform installed (via VS Code)
+- ✅ GitHub account (fork & clone this repo)
+- ✅ Docker installed (for local build and ECR push)
+- ✅ Node.js (v18+) & npm/yarn** installed (for React build)
 
-- Make sure the app is live on `https://tm.<your-domain>` or `https://tm.labs.<your-domain>`
+## 3. Tools & Technologies
 
-- App must use HTTPS. Hosted on ECS. Figure out the rest. Once app is live, add screenshots to the README.md file.
+|Category|Tool|Purpose| 
+|-----------|----------------|----------|
+| IaC (Infrastructure as Code) |Terraform |Automate creation of AWS resources |
+| Cloud Provider | AWS | Infrastructure hosting (Fargate, RDS, Route53, ALB, ACM, etc.) |
+| Compute | AWS ECS Fargate|Run containerized Node.js application |
+| Networking|AWS VPC, Subnets, Security Groups|Secure network segmentation |
+| Load Balancing|AWS Application Load Balancer (ALB)|Distribute incoming traffic |
+| DNS Management|AWS Route53|Domain management & routing |
+| SSL/TLS Certificates|AWS ACM|Secure HTTPS access |
+| Container Registry|AWS ECR|Store and version Docker images |
+| CI/CD|GitHub Actions|Continuous integration & deployment |
+| Security Scanning|Trivy|Container image vulnerability scanning |
+| Version Control|GitHub|Source code hosting and collaboration |
+| IDE|Visual Studio Code|Development and IaC editing environment |
 
-- Add architecture diagram of how the infrastructure is setup. (Use Lucidchart or draw.io or mermaid) You are free to use any diagramming tool.
+## 4. Project Structure
 
-## Local app setup 💻
-
-```bash
-yarn install
-yarn build
-yarn global add serve
-serve -s build
-
-#yarn start
-http://localhost:3000/workspaces/default/dashboard
-
-## or
-yarn global add serve
-serve -s build
+```
+threat-composer-app/
+├── app/                             # Frontend / application source code
+│   ├── src/                         # (React or Node app source files)
+│   ├── public/                      # Static assets
+│   ├── package.json                 # App dependencies and scripts
+│   └── ...                          # Other app-related files
+│
+├── tf_infra/                        # Terraform infrastructure code
+│   ├── main.tf                      # Root Terraform configuration
+│   ├── variables.tf                 # Variable definitions
+│   ├── outputs.tf                   # Output definitions
+│   ├── terraform.tf                 # Backend / provider config
+│   └── modules/                     # Reusable Terraform modules
+│       ├── acm/                     # SSL certificate (ACM) setup
+│       ├── dns/                     # Route53 DNS configuration
+│       ├── vpc/                     # VPC and networking resources
+│       ├── alb/                     # Application Load Balancer
+│       ├── ecs/                     # ECS cluster and services
+│       └── ecr/                     # Elastic Container Registry
+│
+├── .github/
+│   └── workflows/                   # GitHub Actions CI/CD pipelines
+│       ├── main_deploy.yml          # CI/CD pipeline (Terraform + Docker deploy)
+│       └── destroy.yml              # Manual teardown (Docker + Terraform destroy)
+│
+├── .gitignore                       # Git ignore configuration
+└── README.md                        # Project documentation
 ```
 
-## Useful links 🔗
+## 5. Architecture diagram
+![Architecture Diagram](./images/Architecture-diagram.png)
 
-- [Terraform AWS Registry](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
-- [Terraform AWS ECS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster)
-- [Terraform Docs](https://www.terraform.io/docs/index.html)
-- [ECS Docs](https://docs.aws.amazon.com/ecs/latest/userguide/what-is-ecs.html)
+## 6. Local Setup
 
-## Advice & Tips �
+Clone this repository and navigate into the app directory.
+You can run the application either with npm (for development) or with Docker (for an isolated runtime).
 
-- This is just a simple app, you may use another app if you'd like. 
-- Use best practices for your Terraform code. Use best practices for your container image. Use best practices for your CI/CD pipeline.
+Using npm: Runs the app in development mode at http://localhost:3000.
+```
+npm install
+npm start
+```
+Using Docker: If you have Docker installed, you can run the app in a container (no Node.js setup needed). Access it at http://localhost:8080.
+```
+docker build -t threat-composer-app ./app
+docker run -p 8080:80 threat-composer-app
+```
+
+## 6. Demo
+## 7. Screenshots
