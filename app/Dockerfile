@@ -10,6 +10,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install --legacy-peer-deps
 RUN npm install ajv@8.12.0 ajv-keywords@5.1.0 --legacy-peer-deps
+RUN npm install zod@3.21.4 --legacy-peer-deps
 
 # Copy the rest of the source code
 COPY . .
