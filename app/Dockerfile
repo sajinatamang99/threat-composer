@@ -22,12 +22,6 @@ RUN addgroup -S appgroup && adduser -S -G appgroup appuser
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Remove default nginx config
-RUN rm -f /etc/nginx/conf.d/default.conf
-
-# Copy custom nginx config
-COPY default.conf /etc/nginx/conf.d/default.conf
-
 # Copy React build from previous stage
 COPY --from=build /app/build /usr/share/nginx/html
 
