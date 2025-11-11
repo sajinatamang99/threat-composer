@@ -100,7 +100,7 @@ docker run -p 8080:80 threat-composer-app
 
 ## 6. Demo
 
-[Watch App Demo](./images/threat-composer-demo.mp4)
+[Watch App Demo](./images/threat-composer-demo.gif)
 
 ## 7. Screenshots
 
