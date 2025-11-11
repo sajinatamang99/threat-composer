@@ -27,8 +27,8 @@ Before running this project, ensure the following are available
 - ✅ AWS CLI configured (aws configure in local system)
 - ✅ Terraform installed (via VS Code)
 - ✅ GitHub account (fork & clone this repo)
+- ✅ Git installed (via VS Code)
 - ✅ Docker installed (for local build and ECR push)
-- ✅ Node.js (v18+) & npm/yarn** installed (for React build)
 
 ## 3. Tools & Technologies
 
