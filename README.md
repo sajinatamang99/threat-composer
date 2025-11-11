@@ -80,7 +80,7 @@ threat-composer-app/
 ```
 
 ## 5. Architecture diagram
-![Architecture Diagram](./images/Architecture-diagram.png)
+![Architecture](images/Architecture.diagram.png)
 
 ## 6. Local Setup
 
@@ -100,8 +100,8 @@ docker run -p 8080:80 threat-composer-app
 
 ## 6. Demo
 
-![App Demo](./images/threat-composer-demo.mp4)
+[Watch App Demo](./images/threat-composer-demo.mp4)
 
 ## 7. Screenshots
 
-![alt text](./images/threat-composer-image.jpg)
+![alt text](./images/threat-composer-image.JPG)
