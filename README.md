@@ -1,5 +1,6 @@
 # Threat Composer — Infrastructure as Code (IaC) Deployment
 **Threat Composer** is an open-source threat-modeling tool developed by **AWS Labs** that helps teams identify, document and visualise potential security threats to cloud or system architectures. It is a single-page web application (built with React + Cloudscape UI) that runs fully in the browser. The default deployment does not include a backend/API — all data (system description, diagrams, assumptions, threats, mitigations, etc.) is stored in browser local storage.
+
 🧩 Original Tool: [Threat Composer Tool](https://awslabs.github.io/threat-composer/workspaces/default/dashboard)
 
 🌍 Live Application: [www.devopsproject.org](https://www.devopsproject.org)
