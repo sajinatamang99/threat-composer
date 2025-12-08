@@ -194,11 +194,11 @@ resource "aws_security_group" "ecs_sg" {
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
-  from_port       = 80
-  to_port         = 80
-  protocol        = "tcp"
-  security_groups = [aws_security_group.alb_sg.id]
-  description     = "Allows HTTP traffic only from the ALB security group, preventing direct access from the internet."
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
+    description     = "Allows HTTP traffic only from the ALB security group, preventing direct access from the internet."
   }
 
   egress {
