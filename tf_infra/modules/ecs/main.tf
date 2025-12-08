@@ -56,3 +56,29 @@ resource "aws_ecs_task_definition" "ecs_task" {
     Name = "${var.project}-task"
   })
 }
+
+resource "aws_ecs_service" "ecs_service" {
+  name            = "${var.project}-ecs-service"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.ecs_task.arn
+  desired_count   = var.desired_count
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = var.private_subnet_ids
+    security_groups  = [var.ecs_sg_id]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = var.target_group_arn
+    container_name   = "app"
+    container_port   = var.container_port
+  }
+
+  depends_on = [var.alb_listener_arn]
+
+  tags = merge(var.tags, {
+    Name = "${var.project}-ecs-service"
+  })
+}
