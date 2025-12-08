@@ -1,0 +1,83 @@
+# .github/workflows/destroy.yml
+name: Manual Destroy (Docker + Terraform)
+
+on:
+  workflow_dispatch:  # Manual trigger only
+
+env:
+    AWS_REGION: eu-west-2
+    ECR_REPO_NAME: threat-composer-repo
+    AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+jobs:
+  docker-destroy:
+    name: Docker cleanup
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-aws-connect
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Delete all images from ECR repository
+        env:
+          ECR_REPO_NAME: ${{ env.ECR_REPO_NAME }}
+        run: |
+          echo "Deleting all images from ECR repository: $ECR_REPO_NAME"
+          IMAGE_IDS=$(aws ecr list-images --repository-name $ECR_REPO_NAME --query 'imageIds[*]' --output json)
+          if [ "$IMAGE_IDS" != "[]" ]; then
+            aws ecr batch-delete-image --repository-name $ECR_REPO_NAME --image-ids "$IMAGE_IDS"
+            echo "✅ All images deleted from ECR."
+          else
+            echo "ℹ️ No images found in ECR repository."
+          fi
+
+  terraform-destroy:
+    name: Terraform destroy
+    runs-on: ubuntu-latest
+    needs: docker-destroy  # wait for docker cleanup
+
+    permissions:
+      contents: read
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: tf_infra
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-aws-connect
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve

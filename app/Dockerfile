@@ -40,6 +40,7 @@ WORKDIR /app
 
 # #Copy files into the Docker image
 COPY --chown=app:app . .
+RUN chmod +x ./scripts/build.sh
 RUN ./scripts/build.sh
 
 # # Stage 2: Serve the application using Nginx
