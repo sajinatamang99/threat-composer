@@ -181,7 +181,7 @@ resource "aws_security_group" "alb_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [aws_subnet.public_subnets["public_subnet_1"].cidr_block, aws_subnet.public_subnets["public_subnet_2"].cidr_block]
+    cidr_blocks = [aws_vpc.vpc.cidr_block]
     description = "Allows outbound traffic only within the public subnets of the ALB"
   }
   tags = { Name = "alb-sg" }
